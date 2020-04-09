@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fbffffff">
+
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="36sp">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/logo_mind_hug" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="MindHug ®"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_marginHorizontal="40dp"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/a" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Explore your community"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:text="Find, book and try a wide choice of beneficial therapies and activities in your community. We will offer art therapy, mindfulness, music therapy, sound baths, breathing, pet therapy, drama therapy, yoga and nature walks."
+                android:textColor="#000" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:src="@drawable/b" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Engage digitally"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:text="Subscribe to a variety of digital content, media, activities and therapies. From experiential art based activities to guided meditation to breathing exercises."
+                android:textColor="#000" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:src="@drawable/c" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Book workshops and events"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:text="Book and attend bespoke workshops and retreats to help rejuvenate yourself. If you would like to talk to us about organising a workshop for your organisation or group, please contact us."
+                android:textColor="#000" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:src="@drawable/d" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Experience free taster sessions
+"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:text="Attend free events to meet your community and try some therapies and activities."
+                android:textColor="#000" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="40dp"
+                android:src="@drawable/e" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Employ a mood diary and wellbeing analytics"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+              android:paddingBottom="40dp"
+                android:layout_marginVertical="8dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:text="Track lifestyle, sleep, diet, emotional health and your response to activities and therapies through our unique mood diary. Use our analytics to find what works best for you."
+                android:textColor="#000" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="12dp"
+        app:srcCompat="@drawable/close_black" />
+
+</RelativeLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ThemeOverlay.AppCompat.Dark"
+    android:layout_width="match_parent"
+    android:layout_height="230dp"
+    android:background="@drawable/header_background"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/closeDrawer"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@drawable/menu"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profileImageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+           android:layout_marginTop="24dp"
+            android:layout_marginLeft="24dp"
+            android:src="@drawable/welcome_background"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="0.5dp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginLeft="24dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:textSize="20sp"
+            android:text="Avinash Kumar"
+            android:textColor="#000" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/email"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="24dp"
+            android:paddingBottom="0dp"
+            android:text=" @vinashkumar"
+            android:fontFamily="sans-serif-condensed-light"
+            android:textColor="#9D96A0" />
+    </LinearLayout>
+</RelativeLayout>

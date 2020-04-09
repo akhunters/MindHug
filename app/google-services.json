@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "901273034464",
+    "firebase_url": "https://mindhug-7bc46.firebaseio.com",
+    "project_id": "mindhug-7bc46",
+    "storage_bucket": "mindhug-7bc46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901273034464:android:9ad6726cbe9f7e42dfba85",
+        "android_client_info": {
+          "package_name": "com.akhunters.mindhug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901273034464-3qlgco10sul9hdt3jj8u0368v71m5lu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDotXJo3lfJi8KlfhL4ahcU3JLWNXF8WXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901273034464-3qlgco10sul9hdt3jj8u0368v71m5lu5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
