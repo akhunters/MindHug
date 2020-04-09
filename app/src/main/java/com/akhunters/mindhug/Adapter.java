@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,9 +25,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
 
     Context context;
-    List<Post> items;
+    List<PostRecyclerView> items;
 
-    public Adapter(Context context, List<Post> items) {
+    public Adapter(Context context, List<PostRecyclerView> items) {
         this.context = context;
         this.items = items;
     }
@@ -42,7 +43,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, final int position) {
-        final Post post = items.get(position);
+        final PostRecyclerView post = items.get(position);
         holder.time.setText(post.date);
         holder.title.setText(post.title);
         holder.location.setText(post.location);
@@ -58,15 +59,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
             holder.back.setLayoutParams(params);
         }
 
-        /*if (position == 0){
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(0, 120, 0,0);
-            holder.margin.setLayoutParams(params);
-        }
-*/
         if(position%2 == 0)
             holder.back.setBackgroundResource(R.drawable.trend_color);
 
@@ -75,27 +67,17 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
             public void onClick(View v) {
                 Intent intent = new Intent(context,Details.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("position",position);
+                intent.putExtra("position",Integer.toString(position+1));
                 context.startActivity(intent);
             }
         });
 
         Glide.with(context)
-
                 .setDefaultRequestOptions(new RequestOptions().timeout(30000))
                 .load(post.profileUrl)
-                .error(R.drawable.profile_avatar)
+                .error(R.drawable.welcome_back)
                 .into(holder.profile);
 
-        /*holder.status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ModifyStudent.class);
-                intent.putExtra("phoneNumber", student.getPhoneNumber());
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
-        });*/
     }
 
     @Override

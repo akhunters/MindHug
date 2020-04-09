@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Layout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -93,17 +94,20 @@ public class MainActivity extends AppCompatActivity {
     long maxId = 0;
     String strDate;
     MaterialTextView email;
+    String profileUrl = null;
     String category;
     String UID;
 
     RecyclerView recyclerView;
     Adapter adapter;
     LinearLayoutManager manager;
-    List<Post> items = new ArrayList<>();
+    List<PostRecyclerView> items = new ArrayList<>();
     DatabaseReference reference;
 
     ImageView topIcon;
     MaterialTextView topText;
+
+    FirebaseAuth mAuth;
 
 
     @Override
@@ -121,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = binding.recycler;
         //topIcon = binding.topIcon;
-      //  topText = binding.topText;
+        //  topText = binding.topText;
 
         manager = new LinearLayoutManager(this);
         adapter = new Adapter(this, items);
@@ -131,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
         items = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference().child("Posts");
 
-        mRef = FirebaseDatabase.getInstance().getReference().child("Events");
+
+
 
         navigationView = binding.navigationMenu;
         drawerLayout = binding.drawerLayout;
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_events:
                         bottomTitle.setText("Events");
-                       // topText.setText("Events");
+                        // topText.setText("Events");
                         Glide.with(MainActivity.this)
                                 .load(R.drawable.ic_date_range_black_24dp)
                                 .into(bottomAppBarLogo);
@@ -203,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_logout:
                         FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(getApplicationContext(),Welcome.class));
                         finish();
                         break;
                 }
@@ -211,15 +217,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         View headerView = navigationView.getHeaderView(0);
-        name = headerView.findViewById(R.id.name);
-        email = headerView.findViewById(R.id.email);
+        name = headerView.findViewById(R.id.nameHeader);
+        email = headerView.findViewById(R.id.emailHeader);
         close = headerView.findViewById(R.id.closeDrawer);
+        headerProfile = headerView.findViewById(R.id.profileImageView);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawerLayout.closeDrawers();
             }
         });
+
+
+
         open = binding.bottomAppBarChevron;
         menuClickBottom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,20 +247,32 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void openDialog() {
-        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.post_add_dialog, null);
 
-        final TextInputLayout title = dialogView.findViewById(R.id.titleLayout);
-        final TextInputLayout location = dialogView.findViewById(R.id.locationLayout);
-        final TextInputLayout date = dialogView.findViewById(R.id.dateLayout);
-        final TextInputLayout time = dialogView.findViewById(R.id.timeLayout);
-        final TextInputLayout dropDownLayout = dialogView.findViewById(R.id.dropdownLayout);
-        final CircularProgressButton add = dialogView.findViewById(R.id.submit);
-        MaterialButton cancel = dialogView.findViewById(R.id.cancel);
 
-        TextInputEditText dateEdit = dialogView.findViewById(R.id.dateEditText);
-        final TextInputEditText timeEdit = dialogView.findViewById(R.id.timeEditText);
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.post_add_dialog);
+        final Window window = dialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        final TextInputLayout title = dialog.findViewById(R.id.titleLayout);
+        final TextInputLayout address1 = dialog.findViewById(R.id.streetLayout);
+        final TextInputLayout address2 = dialog.findViewById(R.id.locationLayout);
+        final TextInputLayout date = dialog.findViewById(R.id.dateLayout);
+        final TextInputLayout spots = dialog.findViewById(R.id.spotsLayout);
+        final TextInputLayout startTime = dialog.findViewById(R.id.startTimeLayout);
+        final TextInputLayout endTime = dialog.findViewById(R.id.endTimeLayout);
+        final TextInputLayout dropDownLayout = dialog.findViewById(R.id.dropdownLayout);
+        final TextInputLayout description = dialog.findViewById(R.id.contentLayout);
+
+        final CircularProgressButton add = dialog.findViewById(R.id.submit);
+        MaterialButton cancel = dialog.findViewById(R.id.cancel);
+
+        final TextInputEditText dateEdit = dialog.findViewById(R.id.dateEditText);
+        final TextInputEditText startTimeEdit = dialog.findViewById(R.id.startTimeEditText);
+        final TextInputEditText endTimeEdit = dialog.findViewById(R.id.endTimeEditText);
 
 
         Calendar calendar = Calendar.getInstance();
@@ -258,13 +280,13 @@ public class MainActivity extends AppCompatActivity {
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        final AutoCompleteTextView chooser = dialogView.findViewById(R.id.choose);
+        final AutoCompleteTextView chooser = dialog.findViewById(R.id.choose);
 
         String[] list = new String[]{"Music", "Art", "Yoga", "Devotional"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_item, list);
         chooser.setAdapter(adapter);
 
-        timeEdit.setOnClickListener(new View.OnClickListener() {
+        startTimeEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar mCurrentTime = Calendar.getInstance();
@@ -275,19 +297,86 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
 
-                        String time;
+                        String hour = null;
+                        String minute = null;
+                        String time = null;
                         String AM_PM;
                         if (selectedHour < 12) {
                             AM_PM = "AM";
 
                         } else {
                             AM_PM = "PM";
-                            selectedHour -= 12;
+                            selectedHour = selectedHour - 12;
                         }
-                        time = selectedHour + ":" + selectedMinute + " " + AM_PM;
-                        timeEdit.setText(time);
+                        if(selectedHour < 10){
+                            hour = "0"+selectedHour;
+
+                        }
+                        else {
+                            hour = Integer.toString(selectedHour);
+
+                        }
+                        if(selectedMinute < 10){
+                            minute = "0"+selectedMinute;
+
+                        }
+                        else {
+                            minute = Integer.toString(selectedMinute);
+
+                        }
+
+                        time = hour + ":" + minute + " " + AM_PM;
+                        startTimeEdit.setText(time);
                     }
-                }, hour, minute, true);//Yes 24 hour time
+                }, hour, minute, true);
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+            }
+        });
+
+        endTimeEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mCurrentTime = Calendar.getInstance();
+                int hour = mCurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mCurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        String hour = null;
+                        String minute = null;
+                        String time = null;
+                        String AM_PM;
+                        if (selectedHour < 12) {
+                            AM_PM = "AM";
+
+                        } else {
+                            AM_PM = "PM";
+                            selectedHour = selectedHour - 12;
+                        }
+                        if(selectedHour < 10){
+                            hour = "0"+selectedHour;
+
+                        }
+                        else {
+                            hour = Integer.toString(selectedHour);
+
+                        }
+                        if(selectedMinute < 10){
+                            minute = "0"+selectedMinute;
+
+                        }
+                        else {
+                            minute = Integer.toString(selectedMinute);
+
+                        }
+
+
+                        time = hour + ":" + minute + " " + AM_PM;
+                        endTimeEdit.setText(time);
+                    }
+                }, hour, minute, true);
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }
@@ -302,7 +391,17 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         month = month + 1;
-                        strDate = day + "/" + month + "/" + year;
+                        String dd = "";
+                        String mm = "";
+                        if (day < 10)
+                            dd = "0" + day;
+                        else
+                            dd = Integer.toString(day);
+                        if (month < 10)
+                            mm = "0" + month;
+                        else
+                            mm = Integer.toString(month);
+                        strDate = dd + "/" + mm + "/" + year;
                         date.getEditText().setText(strDate);
                     }
                 }, year, month, day);
@@ -310,12 +409,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        dialogBuilder.setCanceledOnTouchOutside(false);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogBuilder.dismiss();
+                dialog.dismiss();
             }
         });
 
@@ -327,56 +425,120 @@ public class MainActivity extends AppCompatActivity {
                 add.startAnimation();
 
                 final String strTitle = title.getEditText().getText().toString().trim();
-                final String strLocation = location.getEditText().getText().toString().trim();
-                category = dropDownLayout.getEditText().getText().toString().trim();
+                final String strAddress1 = address1.getEditText().getText().toString().trim();
+                final String strAddress2 = address2.getEditText().getText().toString().trim();
+                final String strDate = date.getEditText().getText().toString().trim();
+                final String strSpots = spots.getEditText().getText().toString().trim();
+                final String strStartTime = startTime.getEditText().getText().toString().trim();
+                final String strEndTime = endTimeEdit.getText().toString().trim();
+                final String strCategory = dropDownLayout.getEditText().getText().toString().trim();
+                final String strDescription = description.getEditText().getText().toString().trim();
 
                 if (strTitle.isEmpty()) {
-                    title.setError("Field cannot be empty");
+                    title.setError("Field cannot be Empty");
                     title.requestFocus();
                     add.revertAnimation();
-                    add.setBackgroundResource(R.drawable.welcome_signup_background);
+                    add.setBackgroundResource(R.drawable.welcome_login_background);
+
                     return;
                 } else {
                     title.setError(null);
                 }
-                if (strLocation.isEmpty()) {
-                    location.setError("Field cannot be empty");
-                    location.requestFocus();
+
+
+                if (strAddress1.isEmpty()) {
+                    address1.setError("Field cannot be Empty");
+                    address1.requestFocus();
                     add.revertAnimation();
-                    add.setBackgroundResource(R.drawable.welcome_signup_background);
+                    add.setBackgroundResource(R.drawable.welcome_login_background);
+
                     return;
                 } else {
-                    location.setError(null);
+                    address1.setError(null);
                 }
 
-                if (date.getEditText().getText().toString().isEmpty()) {
-                    date.setError("Field cannot be empty");
+
+                if (strAddress2.isEmpty()) {
+                    address2.setError("Field cannot be Empty");
+                    address2.requestFocus();
+                    add.revertAnimation();
+                    add.setBackgroundResource(R.drawable.welcome_login_background);
+
+                    return;
+                } else {
+                    address2.setError(null);
+                }
+
+
+                if (strDate.isEmpty()) {
+                    date.setError("Field cannot be Empty");
                     date.requestFocus();
                     add.revertAnimation();
-                    add.setBackgroundResource(R.drawable.welcome_signup_background);
+                    add.setBackgroundResource(R.drawable.welcome_login_background);
+
                     return;
                 } else {
                     date.setError(null);
                 }
 
-                if (time.getEditText().getText().toString().isEmpty()) {
-                    time.setError("Field cannot be empty");
-                    time.requestFocus();
+
+                if (strSpots.isEmpty()) {
+                    spots.setError("Field cannot be Empty");
+                    spots.requestFocus();
                     add.revertAnimation();
-                    add.setBackgroundResource(R.drawable.welcome_signup_background);
+                    add.setBackgroundResource(R.drawable.welcome_login_background);
+
                     return;
                 } else {
-                    time.setError(null);
+                    spots.setError(null);
                 }
 
-                if (dropDownLayout.getEditText().getText().toString().isEmpty()) {
-                    dropDownLayout.setError("Field cannot be empty");
+
+                if (strStartTime.isEmpty()) {
+                    startTime.setError("Field cannot be Empty");
+                    startTime.requestFocus();
+                    add.revertAnimation();
+                    add.setBackgroundResource(R.drawable.welcome_login_background);
+
+                    return;
+                } else {
+                    startTime.setError(null);
+                }
+
+
+                if (strEndTime.isEmpty()) {
+                    endTime.setError("Field cannot be Empty");
+                    endTime.requestFocus();
+                    add.revertAnimation();
+                    add.setBackgroundResource(R.drawable.welcome_login_background);
+
+                    return;
+                } else {
+                    endTime.setError(null);
+                }
+
+
+                if (strCategory.isEmpty()) {
+                    dropDownLayout.setError("Field cannot be Empty");
                     dropDownLayout.requestFocus();
                     add.revertAnimation();
-                    add.setBackgroundResource(R.drawable.welcome_signup_background);
+                    add.setBackgroundResource(R.drawable.welcome_login_background);
+
                     return;
                 } else {
                     dropDownLayout.setError(null);
+                }
+
+
+                if (strDescription.isEmpty()) {
+                    description.setError("Field cannot be Empty");
+                    description.requestFocus();
+                    add.revertAnimation();
+                    add.setBackgroundResource(R.drawable.welcome_login_background);
+
+                    return;
+                } else {
+                    description.setError(null);
                 }
 
                 final DatabaseReference postRef = FirebaseDatabase.getInstance().getReference().child("Posts");
@@ -384,6 +546,19 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = mAuth.getCurrentUser();
                 UID = user.getUid();
 
+                final Post item = new Post();
+
+                item.title = strTitle;
+                item.address1 = strAddress1;
+                item.address2 = strAddress2;
+                item.date = strDate;
+                item.spots = strSpots;
+                item.startTime = strStartTime;
+                item.endTime = strEndTime;
+                item.category = strCategory;
+                item.description = strDescription;
+                item.UID = UID;
+                item.coming = "0";
 
                 postRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -392,65 +567,33 @@ public class MainActivity extends AppCompatActivity {
                             maxId = dataSnapshot.getChildrenCount();
                         }
 
-                        final String[] url = new String[1];
-                        final String[] newStr = new String[1];
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users").child(UID);
-                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        String Id = Long.toString(maxId + 1);
+                        postRef.child(Id).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                url[0] = dataSnapshot.child("userProfileUrl").getValue().toString();
-                                newStr[0] = url[0];
+                            public void onComplete(@NonNull Task<Void> task) {
 
-                                final Post item = new Post();
-                                item.category = category;
-                                item.profileUrl = url[0];
-                                String time = timeEdit.getText().toString().trim();
-                                item.date = strDate + " " + time;
-                                item.location = strLocation;
-                                item.title = strTitle;
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(MainActivity.this, "Post Added", Toast.LENGTH_SHORT).show();
 
+                                    Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.done_black);
+                                    add.doneLoadingAnimation(ContextCompat.getColor(MainActivity.this, android.R.color.white), icon);
+                                    setTrendingContent();
 
-                                String max = Long.toString(maxId + 1);
-
-                                postRef.child(max).setValue(item).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-
-                                        if (task.isSuccessful()) {
-                                            /*Snackbar.make(findViewById(R.id.coordinatorLayout), "Post Added", Snackbar.LENGTH_LONG)
-                                                    .setAction("Action", null).show();*/
-                                            Toast.makeText(MainActivity.this, "Post Added", Toast.LENGTH_SHORT).show();
-                                            Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_done_white_48dp);
-                                            add.doneLoadingAnimation(ContextCompat.getColor(MainActivity.this, android.R.color.black), icon);
-                                            Handler handler = new Handler();
-                                            handler.postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    add.revertAnimation();
-                                                    add.setBackgroundResource(R.drawable.welcome_signup_background);
-                                                    dialogBuilder.dismiss();
-                                                }
-                                            }, 1000);
-
-                                            setTrendingContent();
-                                        } else {
-                                            Snackbar.make(findViewById(R.id.coordinatorLayout), task.getException().getMessage(), Snackbar.LENGTH_LONG)
-                                                    .setAction("Action", null).show();
-                                            add.revertAnimation();
-                                            add.setBackgroundResource(R.drawable.welcome_signup_background);
-                                            return;
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            dialog.dismiss();
                                         }
-
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }, 1000);
+                                } else {
+                                    Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    add.revertAnimation();
+                                    add.setBackgroundResource(R.drawable.welcome_login_background);
+                                }
 
                             }
                         });
-
                     }
 
                     @Override
@@ -462,15 +605,32 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.show();
+        dialog.show();
     }
-
 
     public void setTrendingContent() {
 
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        String currentUID = user.getUid();
+
+
+        FirebaseDatabase.getInstance().getReference().child("Users").child(currentUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                name.setText(dataSnapshot.child("userName").getValue().toString());
+                email.setText(dataSnapshot.child("userEmail").getValue().toString());
+                Glide.with(MainActivity.this)
+                        .load(dataSnapshot.child("userProfileUrl").getValue().toString())
+                        .error(R.drawable.welcome_back).
+                        into(headerProfile);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -480,22 +640,34 @@ public class MainActivity extends AppCompatActivity {
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 items.clear();
+                if (dataSnapshot.exists())
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        final PostRecyclerView postRecyclerView = new PostRecyclerView();
 
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    Post post = new Post();
-                    post.title = dataSnapshot1.child("title").getValue().toString();
-                    post.location = dataSnapshot1.child("location").getValue().toString();
-                    post.date = dataSnapshot1.child("date").getValue().toString();
-                    post.profileUrl = dataSnapshot1.child("profileUrl").getValue().toString();
-                    post.category = dataSnapshot1.child("category").getValue().toString();
-                    items.add(post);
+                        postRecyclerView.title = dataSnapshot1.child("title").getValue().toString();
+                        postRecyclerView.location = dataSnapshot1.child("address1").getValue().toString();
+                        postRecyclerView.date = dataSnapshot1.child("date").getValue().toString();
+                        String UID = dataSnapshot1.child("uid").getValue().toString();
+                        postRecyclerView.category = dataSnapshot1.child("category").getValue().toString();
+                        FirebaseDatabase.getInstance().getReference().child("Users").child(UID).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                              postRecyclerView.profileUrl = dataSnapshot.child("userProfileUrl").getValue().toString();
+                            }
 
-                }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        items.add(postRecyclerView);
+
+                    }
                 adapter = new Adapter(getApplicationContext(), items);
                 recyclerView.setAdapter(adapter);
                 dialog.dismiss();
@@ -511,7 +683,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public  void contactUs(){
+    public void contactUs() {
 
 
         final Dialog dialog = new Dialog(this);
@@ -534,7 +706,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void aboutUs(){
+    public void aboutUs() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.about_us);
@@ -553,4 +725,6 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
+
 }

@@ -28,14 +28,14 @@ android:id="@+id/margin"
             android:id="@+id/timeItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:fontFamily="sans-serif-condensed-light"
             android:text="FRIDAY 7:30 PM"
-            android:textColor="#8E979C" />
+            android:textColor="#000" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_gravity="bottom">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -66,21 +66,24 @@ android:id="@+id/margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
+            android:weightSum="2"
             android:orientation="horizontal">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/addressItem"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
+                android:layout_weight="0.5"
                 android:layout_gravity="top"
                 android:fontFamily="sans-serif-condensed-light"
                 android:text="1st Street, Community Hall,LONDON"
-                android:textColor="#8E979C" />
+                android:textColor="#000" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1.5"
                 android:layout_gravity="bottom">
 
                 <de.hdodenhof.circleimageview.CircleImageView

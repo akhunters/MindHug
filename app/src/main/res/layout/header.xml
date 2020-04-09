@@ -33,7 +33,7 @@
             app:civ_border_width="0.5dp" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/name"
+            android:id="@+id/nameHeader"
             style="@style/TextAppearance.AppCompat.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,19 +41,19 @@
             android:layout_marginLeft="24dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:textSize="20sp"
-            android:text="Avinash Kumar"
+            android:text=""
             android:textColor="#000" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/email"
+            android:id="@+id/emailHeader"
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:layout_marginLeft="24dp"
             android:paddingBottom="0dp"
-            android:text=" @vinashkumar"
+            android:text=""
             android:fontFamily="sans-serif-condensed-light"
-            android:textColor="#9D96A0" />
+            android:textColor="#000" />
     </LinearLayout>
 </RelativeLayout>
