@@ -120,13 +120,10 @@ CircleImageView bottomProfile;
         menuClickBottom = binding.bottomAppBarContentContainer;
         floatingActionButton = binding.fab;
         bottomAppBar = binding.bottomAppBar;
-        //frameLayout = binding.frame;
         bottomTitle = binding.bottomAppBarTitle;
         bottomAppBarLogo = binding.bottomAppBarLogo;
 
         recyclerView = binding.recycler;
-        //topIcon = binding.topIcon;
-        //  topText = binding.topText;
 
         manager = new LinearLayoutManager(this);
         adapter = new Adapter(this, items);
@@ -136,9 +133,6 @@ CircleImageView bottomProfile;
         items = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference().child("Posts");
         bottomProfile = binding.profile;
-
-
-
 
         navigationView = binding.navigationMenu;
         drawerLayout = binding.drawerLayout;
@@ -153,27 +147,14 @@ CircleImageView bottomProfile;
                         Glide.with(MainActivity.this)
                                 .load(R.drawable.trend_logo)
                                 .into(bottomAppBarLogo);
-                     /*   Glide.with(MainActivity.this)
-                                .load(R.drawable.trend_logo)
-                                .into(topIcon);
 
-                        topText.setText("Trending");
-*/
-                        //setTrendingContent();
-                       /* LayoutInflater inflater = (LayoutInflater) getApplicationContext()
-                                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.activity_trending, null);
-                        frameLayout.addView(linearLayout);*/
                         break;
                     case R.id.nav_therapies:
                         bottomTitle.setText("Therapies");
                         Glide.with(MainActivity.this)
                                 .load(R.drawable.ic_supervisor_account_black_24dp)
                                 .into(bottomAppBarLogo);
-                       /* topText.setText("Therapies");
-                        Glide.with(MainActivity.this)
-                                .load(R.drawable.ic_supervisor_account_black_24dp)
-                                .into(topIcon);*/
+
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.nav_events:
@@ -295,7 +276,7 @@ CircleImageView bottomProfile;
                 int hour = mCurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mCurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(MainActivity.this,  R.style.MyDatePickerDialogTheme,new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
 
@@ -343,7 +324,7 @@ CircleImageView bottomProfile;
                 int hour = mCurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mCurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(MainActivity.this,  R.style.MyDatePickerDialogTheme,new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         String hour = null;
@@ -389,7 +370,7 @@ CircleImageView bottomProfile;
             @Override
             public void onClick(View v) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        MainActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        MainActivity.this, R.style.MyDatePickerDialogTheme,new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         month = month + 1;
