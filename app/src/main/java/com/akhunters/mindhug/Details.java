@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.akhunters.mindhug.databinding.ActivityDetailsBinding;
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
@@ -28,6 +29,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class Details extends AppCompatActivity {
@@ -55,6 +58,7 @@ public class Details extends AppCompatActivity {
     MaterialTextView description;
     MaterialTextView spotBox;
 
+    CircleImageView hostProfile;
 
     String goingPeople;
     String spotsLeft;
@@ -88,6 +92,7 @@ public class Details extends AppCompatActivity {
         hostName = binding.hostName;
         spotBox = binding.spotsBox;
         description = binding.description;
+        hostProfile = binding.hostProfile;
 
         Intent intent = getIntent();
         position = intent.getStringExtra("position");
@@ -248,6 +253,11 @@ public class Details extends AppCompatActivity {
                         name.setText(dataSnapshot1.child("userName").getValue().toString());
                         email.setText(dataSnapshot1.child("userEmail").getValue().toString());
                         String hostedBy = "Hosted by " + dataSnapshot1.child("userName").getValue().toString();
+                        Glide.with(Details.this)
+                                .load(dataSnapshot1.child("userProfileUrl").getValue().toString())
+                                .error(R.drawable.welcome_back)
+                                .into(hostProfile);
+
                         hostName.setText(hostedBy);
                         dialog.dismiss();
                     }

@@ -26,6 +26,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
 
     Context context;
     List<PostRecyclerView> items;
+    int item = 0;
 
     public Adapter(Context context, List<PostRecyclerView> items) {
         this.context = context;
@@ -37,7 +38,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.trending_item,parent,false);
+        View view = inflater.inflate(R.layout.trending_item, parent, false);
         return new myViewHolder(view);
     }
 
@@ -49,31 +50,32 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
         holder.location.setText(post.location);
         holder.category.setText(post.category);
 
-        if(position == items.size()-1){
+        if (position == items.size() - 1) {
 
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(0, 0, 0,120);
+            params.setMargins(0, 0, 0, 120);
             holder.back.setLayoutParams(params);
         }
 
-        if(position%2 == 0)
+        if (item % 2 != 0)
             holder.back.setBackgroundResource(R.drawable.trend_color);
 
         holder.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,Details.class);
+                Intent intent = new Intent(context, Details.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("position",Integer.toString(position+1));
+                intent.putExtra("position", Integer.toString(position + 1));
                 context.startActivity(intent);
             }
         });
 
+        item++;
+
         Glide.with(context)
-                .setDefaultRequestOptions(new RequestOptions().timeout(30000))
                 .load(post.profileUrl)
                 .error(R.drawable.welcome_back)
                 .into(holder.profile);
@@ -85,7 +87,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
         return items.size();
     }
 
-    public class myViewHolder extends RecyclerView.ViewHolder{
+    public class myViewHolder extends RecyclerView.ViewHolder {
 
         MaterialTextView time;
         MaterialTextView title;

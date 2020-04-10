@@ -19,9 +19,6 @@
             android:layout_height="match_parent"
             android:background="#F3F3F3" />
 
-
-
-
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottom_app_bar"
             android:layout_width="match_parent"

@@ -125,6 +125,7 @@
                     android:paddingLeft="16dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/hostProfile"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:src="@drawable/welcome_back" />

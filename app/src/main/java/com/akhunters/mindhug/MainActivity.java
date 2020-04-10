@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.annotation.GlideModule;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     BottomAppBar bottomAppBar;
     FrameLayout frameLayout;
-
+CircleImageView bottomProfile;
     DatabaseReference mRef;
 
     MaterialTextView bottomTitle;
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         items = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference().child("Posts");
+        bottomProfile = binding.profile;
 
 
 
@@ -575,8 +577,8 @@ public class MainActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(MainActivity.this, "Post Added", Toast.LENGTH_SHORT).show();
 
-                                    Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.done_black);
-                                    add.doneLoadingAnimation(ContextCompat.getColor(MainActivity.this, android.R.color.white), icon);
+                                    Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.black_tick_png);
+                                    add.doneLoadingAnimation(ContextCompat.getColor(MainActivity.this, R.color.colorAccent), icon);
                                     setTrendingContent();
 
                                     Handler handler = new Handler();
@@ -585,12 +587,13 @@ public class MainActivity extends AppCompatActivity {
                                         public void run() {
                                             dialog.dismiss();
                                         }
-                                    }, 1000);
+                                    }, 1500);
                                 } else {
                                     Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     add.revertAnimation();
                                     add.setBackgroundResource(R.drawable.welcome_login_background);
                                 }
+
 
                             }
                         });
@@ -620,6 +623,11 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 name.setText(dataSnapshot.child("userName").getValue().toString());
                 email.setText(dataSnapshot.child("userEmail").getValue().toString());
+                Glide.with(MainActivity.this)
+                        .load(dataSnapshot.child("userProfileUrl").getValue().toString())
+                        .error(R.drawable.welcome_back)
+                        .into(bottomProfile);
+
                 Glide.with(MainActivity.this)
                         .load(dataSnapshot.child("userProfileUrl").getValue().toString())
                         .error(R.drawable.welcome_back).
